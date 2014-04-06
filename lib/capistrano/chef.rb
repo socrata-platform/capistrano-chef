@@ -52,11 +52,16 @@ module Capistrano::Chef
         # Allows deployment from knifeless machine
         # to specific hosts (ie. developent, staging)
         unless ENV['HOSTS']
-          hosts = capistrano_chef.search_chef_nodes(query, options.delete(:attribute), options.delete(:limit)) + [options]
+          hosts_lambda = lambda { capistrano_chef.search_chef_nodes(query, options.delete(:attribute), options.delete(:limit)) + [options] }
+
           if name.is_a?(Array)
+            # if you assign multiple roles to to same set of hosts, do the query now so we can reuse it
+            hosts = hosts_lambda.call
             name.each { |n| role n, *hosts }
           else
-            role name, *hosts
+            # if you are only assigning one role, defer the query until you actually need it to avoid the cost if you don't
+            # capistrano will use the options at the end of the array if present.
+            role(name) { hosts_lambda.call }
           end
         end
       end

@@ -147,13 +147,22 @@ describe Capistrano::Chef do
       it 'does not call search more than once when defining multiple Cap roles' do
         Capistrano::Chef.should_receive(:search_chef_nodes).once
         @configuration.chef_role([:test, :test2])
+        @configuration.find_servers :roles => :test
+        @configuration.find_servers :roles => :test2
       end
+    end
+
+    it 'it does not call chef if there is only one role for the search and we do not ask about it' do
+      query = "this is my chef query"
+      Capistrano::Chef.should_not_receive(:search_chef_nodes)
+      @configuration.chef_role(:test, query)
     end
 
     it 'defaults to calling search with :ipaddress as the attribute and 1000 as the limit when giving a query' do
       query = "this is my chef query"
       Capistrano::Chef.should_receive(:search_chef_nodes).with(query, :ipaddress, 1000).and_return(['10.0.0.2'])
       @configuration.chef_role(:test, query)
+      @configuration.find_servers :roles => :test
     end
 
     it 'allows you to specify the attribute used in the query' do
@@ -161,6 +170,7 @@ describe Capistrano::Chef do
       attribute = :my_attr
       Capistrano::Chef.should_receive(:search_chef_nodes).with(query, attribute, 1000).and_return(['10.0.0.2'])
       @configuration.chef_role(:test, query, :attribute => attribute)
+      @configuration.find_servers :roles => :test
     end
 
     it 'allows you to specify the limit used in the query' do
@@ -168,6 +178,7 @@ describe Capistrano::Chef do
       limit = 55
       Capistrano::Chef.should_receive(:search_chef_nodes).with(query, :ipaddress, limit).and_return(['10.0.0.2'])
       @configuration.chef_role(:test, query, :limit => limit)
+      @configuration.find_servers :roles => :test
     end
   end
 end

@@ -1,5 +1,7 @@
 # Chef For Capistrano 3
 
+[![Join the chat at https://gitter.im/socrata/capistrano-chef](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/socrata/capistrano-chef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A common use-case for applications is to have [Chef](http://www.opscode.com/chef/) configure your systems and use [Capistrano](http://capistranorb.com/) to deploy the applications that run on them.
 
 Capistrano Chef is a Capistrano 3 extension that makes Chef and Capistrano 3 get along like best buds.

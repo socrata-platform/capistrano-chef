@@ -1,5 +1,6 @@
 require 'capistrano'
 require 'chef/knife'
+require 'chef/node'
 require 'chef/data_bag_item'
 require 'chef/search/query'
 
